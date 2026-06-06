@@ -7066,3 +7066,111 @@ footer#pq-footer .widgets ul.pq-contact li {
 	/* color: var(--primary-color); */
 
 }
+
+.home-services-showcase {
+	padding: 130px 0;
+}
+
+.home-service-card {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	min-height: 320px;
+	color: var(--white-color);
+	background: var(--dark-color);
+	border-radius: 20px;
+}
+
+.home-service-card a:hover {
+	border-radius: 30px;
+}
+
+.home-service-card img {
+	width: 100%;
+	height: 320px;
+	object-fit: cover;
+	transition: transform 0.5s ease;
+}
+
+.home-service-card::before {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: linear-gradient(180deg, rgba(32, 33, 37, 0.05), rgba(32, 33, 37, 0.72));
+}
+
+.home-service-card span {
+	position: absolute;
+	left: 30px;
+	right: 30px;
+	bottom: 26px;
+	z-index: 2;
+	color: var(--white-color);
+	font-family: var(--title-fonts);
+	font-size: 28px;
+	font-weight: 600;
+	line-height: 1.25;
+	text-transform: capitalize;
+}
+
+.home-service-card:hover {
+	color: var(--white-color);
+}
+
+.home-service-card:hover img {
+	transform: scale(1.06);
+}
+
+@media (max-width: 767px) {
+	.home-services-showcase {
+		padding: 90px 0;
+	}
+
+	.home-service-card,
+	.home-service-card img {
+		min-height: 260px;
+		height: 260px;
+	}
+
+	.home-service-card span {
+		left: 22px;
+		right: 22px;
+		bottom: 22px;
+		font-size: 23px;
+	}
+}
+
+.mfp-img {
+	transition: transform 0.2s ease;
+	transform-origin: center center;
+	user-select: none;
+}
+
+.pq-gallery-zoom-controls {
+	position: absolute;
+	left: 50%;
+	bottom: -54px;
+	z-index: 1050;
+	display: flex;
+	align-items: center;
+	padding: 8px;
+	background: rgba(32, 33, 37, 0.86);
+	border-radius: 4px;
+	transform: translateX(-50%);
+	pointer-events: none;
+}
+
+.pq-gallery-zoom-value {
+	min-width: 42px;
+	height: 36px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 0;
+	border-radius: 3px;
+	color: var(--white-color);
+	background: rgba(255, 255, 255, 0.14);
+	font-size: 14px;
+	line-height: 1;
+}

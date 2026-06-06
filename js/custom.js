@@ -353,8 +353,130 @@ Design and Developed by: PeacefulQode
             jQuery(this).magnificPopup({
                 delegate: 'a', // the selector for gallery item
                 type: 'image',
+                closeOnContentClick: false,
                 gallery: {
-                    enabled: true
+                    enabled: true,
+                    navigateByImgClick: false
+                },
+                callbacks: {
+                    open: function () {
+                        var popup = this;
+                        var zoom = 1;
+                        var translateX = 0;
+                        var translateY = 0;
+                        var dragStartX = 0;
+                        var dragStartY = 0;
+                        var startTranslateX = 0;
+                        var startTranslateY = 0;
+                        var isDragging = false;
+
+                        function setZoom(value) {
+                            zoom = Math.max(0.5, Math.min(3, value));
+                            if (zoom <= 1) {
+                                translateX = 0;
+                                translateY = 0;
+                            }
+                            updateImageTransform();
+                            jQuery('.pq-gallery-zoom-value').text(Math.round(zoom * 100) + '%');
+                        }
+
+                        function updateImageTransform() {
+                            jQuery('.mfp-img').css({
+                                'cursor': zoom > 1 ? 'grab' : 'default',
+                                'transform': 'translate(' + translateX + 'px, ' + translateY + 'px) scale(' + zoom + ')'
+                            });
+                        }
+
+                        function resetZoom() {
+                            translateX = 0;
+                            translateY = 0;
+                            setZoom(1);
+                        }
+
+                        jQuery('.mfp-content').append(
+                            '<div class="pq-gallery-zoom-controls" aria-label="Image zoom level">' +
+                            '<span class="pq-gallery-zoom-value">100%</span>' +
+                            '</div>'
+                        );
+
+                        jQuery(document).on('wheel.pqGalleryZoom', function (event) {
+                            if (!jQuery(event.target).closest('.mfp-content').length) {
+                                return;
+                            }
+
+                            event.preventDefault();
+                            event.stopPropagation();
+
+                            var wheelEvent = event.originalEvent;
+                            var zoomStep = wheelEvent.deltaY < 0 ? 0.15 : -0.15;
+                            setZoom(zoom + zoomStep);
+                        });
+
+                        jQuery(document)
+                            .on('mousedown.pqGalleryZoom', '.mfp-img', function (event) {
+                                if (zoom <= 1) {
+                                    return;
+                                }
+
+                                event.preventDefault();
+                                event.stopPropagation();
+
+                                isDragging = true;
+                                dragStartX = event.clientX;
+                                dragStartY = event.clientY;
+                                startTranslateX = translateX;
+                                startTranslateY = translateY;
+
+                                jQuery('.mfp-img').css({
+                                    'cursor': 'grabbing',
+                                    'transition': 'none'
+                                });
+                            })
+                            .on('mousemove.pqGalleryZoom', function (event) {
+                                if (!isDragging) {
+                                    return;
+                                }
+
+                                event.preventDefault();
+                                event.stopPropagation();
+
+                                translateX = startTranslateX + event.clientX - dragStartX;
+                                translateY = startTranslateY + event.clientY - dragStartY;
+                                updateImageTransform();
+                            })
+                            .on('mouseup.pqGalleryZoom mouseleave.pqGalleryZoom', function () {
+                                if (!isDragging) {
+                                    return;
+                                }
+
+                                isDragging = false;
+                                jQuery('.mfp-img').css({
+                                    'cursor': zoom > 1 ? 'grab' : 'default',
+                                    'transition': ''
+                                });
+                            });
+
+                        jQuery(document).on('keydown.pqGalleryZoom', function (event) {
+                            if (event.key === '+' || event.key === '=') {
+                                setZoom(zoom + 0.25);
+                            } else if (event.key === '-' || event.key === '_') {
+                                setZoom(zoom - 0.25);
+                            } else if (event.key === '0') {
+                                resetZoom();
+                            }
+                        });
+
+                        popup.ev.on('mfpChange.pqGalleryZoom', resetZoom);
+                        setZoom(1);
+                    },
+                    close: function () {
+                        jQuery(document).off('.pqGalleryZoom');
+                        jQuery('.pq-gallery-zoom-controls').remove();
+                        jQuery('.mfp-img').css({
+                            'cursor': '',
+                            'transform': ''
+                        });
+                    }
                 }
             });
         });
