@@ -335,6 +335,11 @@ Design and Developed by: PeacefulQode
 
     new WOW().init();
 
+    /*==================================================
+    [ Current Year ]
+    ==================================================*/
+    jQuery('[data-current-year]').text(new Date().getFullYear());
+
 
     /*==================================================
     [ Magnific Popup ]
